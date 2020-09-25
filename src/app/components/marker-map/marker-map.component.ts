@@ -1,5 +1,20 @@
-import { Component } from '@angular/core';
-import { circle, latLng, marker, polygon, tileLayer } from 'leaflet';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  NgZone,
+  Output,
+} from '@angular/core';
+import {
+  circle,
+  latLng,
+  LeafletEvent,
+  LeafletMouseEvent,
+  Marker,
+  marker,
+  polygon,
+  tileLayer,
+} from 'leaflet';
 import 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/images/marker-icon-2x.png';
 
@@ -7,9 +22,19 @@ import 'leaflet/dist/images/marker-icon-2x.png';
   selector: 'app-marker-map',
   templateUrl: './marker-map.component.html',
   styleUrls: ['./marker-map.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarkerMapComponent {
-  constructor() {}
+  @Output() markerClicked = new EventEmitter<LeafletEvent>();
+  @Output() mapClicked = new EventEmitter<{ lat: number; lng: number }>();
+  marker: Marker<any> = marker([55.008354, 82.93573], {
+    title: 'Пожар',
+  }).on('click', (event) => {
+    this.zone.run(() => this.onMarkerClick(event));
+  });
+  layers: Marker<any>[] = [this.marker];
+
+  constructor(private zone: NgZone) {}
 
   options = {
     layers: [
@@ -21,15 +46,19 @@ export class MarkerMapComponent {
     zoom: 5,
     center: latLng(55.008354, 82.93573),
   };
-  layers = [
-    circle([55.008354, 82.93573], { radius: 5000 }),
-    polygon([
-      [53.008354, 83.93573],
-      [52.008354, 84.93573],
-      [51.008354, 82.93573],
-    ]),
-    marker([55.008354, 82.93573], {
-      title: 'Пожар',
-    }),
-  ];
+
+  onMarkerClick(event: LeafletEvent): void {
+    console.log(event);
+    // this.markerClicked.next(event);
+  }
+
+  onLeafletClick(event: LeafletMouseEvent): void {
+    this.layers = [];
+    this.layers.push(
+      marker([event.latlng.lat, event.latlng.lng], {
+        title: `${event.latlng.lat}, ${event.latlng.lng}`,
+      })
+    );
+    this.mapClicked.next(event.latlng);
+  }
 }

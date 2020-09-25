@@ -2,4 +2,16 @@
   Информационный ресурс для идентификации термических точек по принадлежности к
   категориям земель
 </p> -->
-<app-marker-map></app-marker-map>
+
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav mode="side" [(opened)]="opened">
+    <app-marker-details [data]="data$ | async"></app-marker-details>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <app-marker-map
+      (mapClicked)="onMapClicked($event)"
+      (markerClicked)="onMarkerClicked($event)"
+    ></app-marker-map>
+  </mat-sidenav-content>
+</mat-sidenav-container>
