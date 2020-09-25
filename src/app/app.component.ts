@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { LeafletEvent, LeafletMouseEvent } from 'leaflet';
+import { LeafletEvent } from 'leaflet';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { PkkService } from './services/pkk.service';
 import { IFeature } from './types/feature.type';
 

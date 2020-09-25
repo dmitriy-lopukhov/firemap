@@ -31,10 +31,8 @@ export class PkkService {
         )
       )
       .subscribe((data: IFeature | null) => {
-        if (data) {
-          console.log(data);
-          this.setData(data);
-        }
+        console.log(data);
+        this.setData(data);
       });
   }
 
@@ -61,7 +59,7 @@ export class PkkService {
     );
   }
 
-  private setData(data: IFeature): void {
+  private setData(data: IFeature | null): void {
     this.state.next(data);
   }
 }

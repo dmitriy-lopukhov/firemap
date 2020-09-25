@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import {
   circle,
+  Icon,
   latLng,
   LeafletEvent,
   LeafletMouseEvent,

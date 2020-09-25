@@ -1,17 +1,18 @@
 <div class="padding-10">
-  <h1>Детали</h1>
+  <h2>Адрес</h2>
   <p *ngIf="data">
-    {{ data.feature.attrs.address }}
+    {{ data.feature.attrs.address ? data.feature.attrs.address : "Нет адреса" }}
   </p>
+  <div *ngIf="!data">Ничего не найдено</div>
 </div>
-<mat-tab-group>
+<mat-tab-group *ngIf="data">
   <mat-tab label="Информация">
     <div class="padding-10">
-      <div *ngIf="data">id: {{ data.feature.attrs.id }}</div>
+      <div>id: {{ data.feature.attrs.id }}</div>
     </div>
   </mat-tab>
   <mat-tab label="Услуги">
-    <div class="padding-10" *ngIf="data">
+    <div class="padding-10">
       <p>
         <a
           class="link"
