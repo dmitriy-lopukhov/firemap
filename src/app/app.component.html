@@ -1,7 +1,10 @@
-<div>
-  <p>
-    Информационный ресурс для идентификации термических точек по принадлежности
-    к категориям земель
-  </p>
-  <div style="height: 600px" leaflet [leafletOptions]="options"></div>
-</div>
+<p>
+  Информационный ресурс для идентификации термических точек по принадлежности к
+  категориям земель
+</p>
+<div
+  class="map"
+  leaflet
+  [leafletOptions]="options"
+  [leafletLayers]="layers"
+></div>
