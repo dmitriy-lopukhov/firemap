@@ -29,11 +29,13 @@ declare var HeatmapOverlay: any;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarkerMapComponent {
-  @Input() set heat(heat: IHeatPoint[]) {
-    const data = {
-      data: heat,
-    };
-    this.heatmapLayer.setData(data);
+  @Input() set heat(heat: IHeatPoint[] | null) {
+    if (heat) {
+      const data = {
+        data: heat,
+      };
+      this.heatmapLayer.setData(data);
+    }
   }
   @Output() markerClicked = new EventEmitter<LeafletEvent>();
   @Output() mapClicked = new EventEmitter<{ lat: number; lng: number }>();
