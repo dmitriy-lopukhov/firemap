@@ -22,7 +22,9 @@
     "@angular/platform-browser-dynamic": "~10.1.2",
     "@angular/router": "~10.1.2",
     "@asymmetrik/ngx-leaflet": "^8.1.0",
+    "heatmap.js": "^2.0.5",
     "leaflet": "^1.7.1",
+    "leaflet-heatmap": "^1.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"

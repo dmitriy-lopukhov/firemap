@@ -16,8 +16,9 @@ import {
   polygon,
   tileLayer,
 } from 'leaflet';
-import 'leaflet/dist/images/marker-shadow.png';
-import 'leaflet/dist/images/marker-icon-2x.png';
+
+declare var L: any;
+declare var HeatmapOverlay: any;
 
 @Component({
   selector: 'app-marker-map',
@@ -40,8 +41,28 @@ export class MarkerMapComponent {
     this.zone.run(() => this.onMarkerClick(event));
   });
   layers: Marker<any>[] = [this.marker];
+  data: any = {
+    data: [],
+  };
 
-  constructor(private zone: NgZone) {}
+  heatmapLayer = new HeatmapOverlay({
+    radius: 2,
+    maxOpacity: 0.8,
+    scaleRadius: true,
+    useLocalExtrema: true,
+    latField: 'lat',
+    lngField: 'lng',
+    valueField: 'count',
+  });
+
+  constructor(private zone: NgZone) {
+    this.data.data.push({
+      lat: 55.008354,
+      lng: 82.93573,
+      count: 1,
+    });
+    this.heatmapLayer.setData(this.data);
+  }
 
   options = {
     layers: [
@@ -49,6 +70,7 @@ export class MarkerMapComponent {
         maxZoom: 18,
         attribution: '...',
       }),
+      this.heatmapLayer,
     ],
     zoom: 5,
     center: latLng(55.008354, 82.93573),
@@ -73,5 +95,16 @@ export class MarkerMapComponent {
       })
     );
     this.mapClicked.next(event.latlng);
+  }
+
+  onMapReady(map: L.Map): void {
+    // map.on('mousemove', (event: L.LeafletMouseEvent) => {
+    //   this.data.data.push({
+    //     lat: event.latlng.lat,
+    //     lng: event.latlng.lng,
+    //     count: 1,
+    //   });
+    //   this.heatmapLayer.setData(this.data);
+    // });
   }
 }
