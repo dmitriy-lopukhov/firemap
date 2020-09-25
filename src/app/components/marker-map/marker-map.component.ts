@@ -30,6 +30,12 @@ export class MarkerMapComponent {
   @Output() mapClicked = new EventEmitter<{ lat: number; lng: number }>();
   marker: Marker<any> = marker([55.008354, 82.93573], {
     title: 'Пожар',
+    icon: new Icon({
+      iconUrl: 'assets/marker-icon-2x.png',
+      shadowUrl: 'assets/marker-shadow.png',
+      iconSize: [25, 41],
+      shadowSize: [41, 41],
+    }),
   }).on('click', (event) => {
     this.zone.run(() => this.onMarkerClick(event));
   });
@@ -58,6 +64,12 @@ export class MarkerMapComponent {
     this.layers.push(
       marker([event.latlng.lat, event.latlng.lng], {
         title: `${event.latlng.lat}, ${event.latlng.lng}`,
+        icon: new Icon({
+          iconUrl: 'assets/marker-icon-2x.png',
+          shadowUrl: 'assets/marker-shadow.png',
+          iconSize: [25, 41],
+          shadowSize: [41, 41],
+        }),
       })
     );
     this.mapClicked.next(event.latlng);
