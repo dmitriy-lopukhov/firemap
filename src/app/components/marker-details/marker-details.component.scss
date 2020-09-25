@@ -5,3 +5,9 @@
 .padding-10 {
   padding: 20px;
 }
+.link {
+  color: #fff;
+  &:hover {
+    color: #ddd;
+  }
+}
