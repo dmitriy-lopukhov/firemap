@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Input,
   NgZone,
   Output,
 } from '@angular/core';
@@ -16,6 +17,7 @@ import {
   polygon,
   tileLayer,
 } from 'leaflet';
+import { IHeatPoint } from 'src/app/types/heat.type';
 
 declare var L: any;
 declare var HeatmapOverlay: any;
@@ -27,6 +29,12 @@ declare var HeatmapOverlay: any;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarkerMapComponent {
+  @Input() set heat(heat: IHeatPoint[]) {
+    const data = {
+      data: heat,
+    };
+    this.heatmapLayer.setData(data);
+  }
   @Output() markerClicked = new EventEmitter<LeafletEvent>();
   @Output() mapClicked = new EventEmitter<{ lat: number; lng: number }>();
   marker: Marker<any> = marker([55.008354, 82.93573], {
@@ -41,12 +49,9 @@ export class MarkerMapComponent {
     this.zone.run(() => this.onMarkerClick(event));
   });
   layers: Marker<any>[] = [this.marker];
-  data: any = {
-    data: [],
-  };
 
   heatmapLayer = new HeatmapOverlay({
-    radius: 2,
+    radius: 0.4,
     maxOpacity: 0.8,
     scaleRadius: true,
     useLocalExtrema: true,
@@ -55,14 +60,7 @@ export class MarkerMapComponent {
     valueField: 'count',
   });
 
-  constructor(private zone: NgZone) {
-    this.data.data.push({
-      lat: 55.008354,
-      lng: 82.93573,
-      count: 1,
-    });
-    this.heatmapLayer.setData(this.data);
-  }
+  constructor(private zone: NgZone) {}
 
   options = {
     layers: [

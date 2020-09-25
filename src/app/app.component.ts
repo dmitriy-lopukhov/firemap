@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { LeafletEvent } from 'leaflet';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { HeatService } from './services/heat.service';
 import { PkkService } from './services/pkk.service';
 import { IFeature } from './types/feature.type';
+import { IHeatPoint } from './types/heat.type';
 
 @Component({
   selector: 'app-root',
@@ -14,8 +16,12 @@ export class AppComponent {
   title = 'firemap';
   opened = false;
   data$: Observable<IFeature | null>;
+  heat$: Observable<IHeatPoint[]>;
 
-  constructor(private pkkService: PkkService) {
+  constructor(
+    private pkkService: PkkService,
+    private heatService: HeatService
+  ) {
     this.data$ = this.pkkService.state$.pipe(
       tap((data) => {
         if (data) {
@@ -23,6 +29,8 @@ export class AppComponent {
         }
       })
     );
+    this.heat$ = this.heatService.points$;
+    this.heatService.getHeatPoints();
   }
 
   onMarkerClicked(event: LeafletEvent): void {

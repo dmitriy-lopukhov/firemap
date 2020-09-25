@@ -10,6 +10,7 @@
 
   <mat-sidenav-content>
     <app-marker-map
+      [heat]="heat$ | async"
       (mapClicked)="onMapClicked($event)"
       (markerClicked)="onMarkerClicked($event)"
     ></app-marker-map>
