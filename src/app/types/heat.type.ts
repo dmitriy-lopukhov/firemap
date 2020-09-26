@@ -21,7 +21,10 @@ export interface IHeatItem {
   satelliteTime: string;
   satellitePortalTime: string;
   reactionTime: string | null;
-  respPerson: string | null;
+  respPerson: {
+    name: string;
+    phone: string;
+  } | null;
   subject: string;
   region: string;
   theNearestSettlement: string;
