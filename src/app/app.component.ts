@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { LeafletEvent } from 'leaflet';
+import { latLng, LeafletEvent } from 'leaflet';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HeatService } from './services/heat.service';
 import { PkkService } from './services/pkk.service';
 import { IFeature } from './types/feature.type';
 import { IHeatItem, IHeatPoint } from './types/heat.type';
+import { IMapClickEvent } from './types/marker-map.type';
 
 @Component({
   selector: 'app-root',
@@ -37,8 +38,8 @@ export class AppComponent {
     this.opened = true;
   }
 
-  onMapClicked(latlng: { lat: number; lng: number }): void {
+  onMapClicked(latlng: IMapClickEvent): void {
     console.log(latlng);
-    this.pkkService.getInformation(latlng.lat, latlng.lng);
+    this.pkkService.getInformation(latlng.lat, latlng.lng, latlng.firearea);
   }
 }

@@ -3,11 +3,19 @@
   <p *ngIf="data">
     {{ data.feature.attrs.address ? data.feature.attrs.address : "Нет адреса" }}
   </p>
-  <div *ngIf="!data">Ничего не найдено</div>
+  <div *ngIf="!data">Адрес не найден</div>
 </div>
 <mat-tab-group *ngIf="data">
   <mat-tab label="Информация">
     <div class="padding-10">
+      <table class="params">
+        <tbody>
+          <tr>
+            <td class="param-name">Площадь возгорания</td>
+            <td>{{ data.firearea }} м2</td>
+          </tr>
+        </tbody>
+      </table>
       <table class="params">
         <tbody>
           <tr>
@@ -32,15 +40,6 @@
           </tr>
         </tbody>
       </table>
-      <!-- <hr /> -->
-      <!-- <table class="params">
-        <tbody>
-          <tr>
-            <td class="param-name">Площадь возгорания</td>
-            <td>100 м2</td>
-          </tr>
-        </tbody>
-      </table> -->
     </div>
   </mat-tab>
   <mat-tab label="Услуги">

@@ -19,7 +19,9 @@ import {
   polygon,
   tileLayer,
 } from 'leaflet';
-import { IHeatItem, IHeatPoint } from 'src/app/types/heat.type';
+import { IHeatItem, IHeatPoint, IPoint } from 'src/app/types/heat.type';
+import * as turf from '@turf/turf';
+import { IMapClickEvent } from 'src/app/types/marker-map.type';
 
 declare var L: any;
 declare var HeatmapOverlay: any;
@@ -38,6 +40,7 @@ const initialView = {
 })
 export class MarkerMapComponent {
   @Input() set heat(heat: IHeatItem[] | null) {
+    this.heats = heat;
     if (heat) {
       const heatPoints: IHeatPoint[] = heat.map((i) => {
         const point: IHeatPoint = {
@@ -62,8 +65,12 @@ export class MarkerMapComponent {
       }
     }
   }
+  get heat(): IHeatItem[] | null {
+    return this.heats;
+  }
+  private heats: IHeatItem[] | null = null;
   @Output() markerClicked = new EventEmitter<LeafletEvent>();
-  @Output() mapClicked = new EventEmitter<{ lat: number; lng: number }>();
+  @Output() mapClicked = new EventEmitter<IMapClickEvent>();
   map: L.Map | null = null;
   marker: Marker<any> = this.getMarker(initialView.lat, initialView.lng);
   private polygons: Polygon<any>[] = [];
@@ -102,7 +109,16 @@ export class MarkerMapComponent {
   onLeafletClick(event: LeafletMouseEvent): void {
     this.markers = [this.getMarker(event.latlng.lat, event.latlng.lng)];
     this.layers = [...this.polygons, ...this.markers];
-    this.mapClicked.next(event.latlng);
+    const mapEvent: IMapClickEvent = {
+      ...event.latlng,
+    };
+
+    const firearea: number | null = this.getFirePoint(event);
+    if (firearea) {
+      mapEvent.firearea = firearea;
+    }
+
+    this.mapClicked.next(mapEvent);
   }
 
   onMapReady(map: L.Map): void {
@@ -135,11 +151,38 @@ export class MarkerMapComponent {
 
   private getHeatPolygon(item: IHeatItem): Polygon<any> {
     const points: LatLngExpression[] = item.polygonBurn.points.map((i) => {
-      return [i.lat, i.lon]; // warning! vice versa
+      return [i.lon, i.lat]; // warning! vice versa
     });
-    console.log(points);
+    const firearea: number = this.calculateFireArea(item.polygonBurn.points);
+    console.log('firearea', firearea);
     return polygon(points, {
       color: 'red',
     });
+  }
+
+  private calculateFireArea(points: IPoint[]): number {
+    const positions: number[][] = points.map((i) => {
+      return [i.lon, i.lat]; // warning! vice versa
+    });
+    const poly = turf.polygon([positions]);
+    const firearea = turf.area(poly);
+    return firearea;
+  }
+
+  getFirePoint(event: LeafletMouseEvent): number | null {
+    if (!this.heats) {
+      return null;
+    }
+    const point = turf.point([event.latlng.lat, event.latlng.lng]);
+    for (const heat of this.heats) {
+      const positions: number[][] = heat.polygonBurn.points.map((i) => {
+        return [i.lon, i.lat]; // warning! vice versa
+      });
+      const poly = turf.polygon([positions]);
+      if (turf.inside(point, poly)) {
+        return Math.round(this.calculateFireArea(heat.polygonBurn.points));
+      }
+    }
+    return null;
   }
 }
