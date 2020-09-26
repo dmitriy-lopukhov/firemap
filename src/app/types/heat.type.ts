@@ -3,11 +3,19 @@ export interface IHeatPoint {
   lng: number;
   count: number;
 }
+
+export interface IPoint {
+  lat: number;
+  lon: number;
+}
 export interface IHeatItem {
   id: number;
-  point: {
-    lat: number;
-    lon: number;
+  point: IPoint;
+  polygon: {
+    points: IPoint[];
+  };
+  polygonBurn: {
+    points: IPoint[];
   };
   reportDay: string;
   satelliteTime: string;
