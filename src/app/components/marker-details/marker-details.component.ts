@@ -5,6 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { IFeature } from 'src/app/types/feature.type';
+import { IMapPoint } from 'src/app/types/map-point.type';
 
 @Component({
   selector: 'app-marker-details',
@@ -13,7 +14,10 @@ import { IFeature } from 'src/app/types/feature.type';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarkerDetailsComponent implements OnInit {
-  @Input() data: IFeature | null = null;
+  @Input() input: {
+    data: IFeature | null;
+    point: IMapPoint | null;
+  } | null = null;
 
   constructor() {}
 

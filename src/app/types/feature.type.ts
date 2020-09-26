@@ -1,5 +1,4 @@
 export interface IFeature {
-  firearea: number | undefined;
   feature: {
     attrs: {
       address: string;

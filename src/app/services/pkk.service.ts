@@ -17,7 +17,7 @@ export class PkkService {
 
   constructor(private http: HttpClient) {}
 
-  getInformation(lat: number, lng: number, firearea?: number): void {
+  getInformation(lat: number, lng: number): void {
     this.getIdByCoordinates(lat, lng)
       .pipe(
         switchMap((feature) =>
@@ -31,9 +31,6 @@ export class PkkService {
         )
       )
       .subscribe((data: IFeature | null) => {
-        if (data) {
-          data.firearea = firearea;
-        }
         console.log(data);
         this.setData(data);
       });

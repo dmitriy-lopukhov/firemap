@@ -22,6 +22,7 @@ import {
 import { IHeatItem, IHeatPoint, IPoint } from 'src/app/types/heat.type';
 import * as turf from '@turf/turf';
 import { IMapClickEvent } from 'src/app/types/marker-map.type';
+import { PointService } from 'src/app/services/point.service';
 
 declare var L: any;
 declare var HeatmapOverlay: any;
@@ -70,7 +71,7 @@ export class MarkerMapComponent {
   }
   private heats: IHeatItem[] | null = null;
   @Output() markerClicked = new EventEmitter<LeafletEvent>();
-  @Output() mapClicked = new EventEmitter<IMapClickEvent>();
+  @Output() mapClicked = new EventEmitter<{ lat: number; lng: number }>();
   map: L.Map | null = null;
   marker: Marker<any> = this.getMarker(initialView.lat, initialView.lng);
   private polygons: Polygon<any>[] = [];
@@ -87,7 +88,7 @@ export class MarkerMapComponent {
     valueField: 'count',
   });
 
-  constructor(private zone: NgZone) {}
+  constructor(private zone: NgZone, private pointService: PointService) {}
 
   options = {
     layers: [
@@ -117,8 +118,8 @@ export class MarkerMapComponent {
     if (firearea) {
       mapEvent.firearea = firearea;
     }
-
-    this.mapClicked.next(mapEvent);
+    this.pointService.setMapPoint(mapEvent);
+    this.mapClicked.next(event.latlng);
   }
 
   onMapReady(map: L.Map): void {
@@ -154,7 +155,6 @@ export class MarkerMapComponent {
       return [i.lat, i.lon];
     });
     const firearea: number = this.calculateFireArea(item.polygonBurn.points);
-    console.log('firearea', firearea);
     return polygon(points, {
       color: 'red',
     });
