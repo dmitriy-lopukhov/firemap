@@ -18,7 +18,7 @@
       <table class="params">
         <tbody>
           <tr>
-            <td class="param-name">ID точки:</td>
+            <td class="param-name">ID точки</td>
             <td>{{ heatPoint.id }}</td>
           </tr>
           <tr *ngIf="input.point && input.point.firearea">
@@ -26,12 +26,66 @@
             <td>{{ input.point.firearea | number }} м2</td>
           </tr>
           <tr>
-            <td class="param-name">Регион:</td>
+            <td class="param-name">Дата пролета спутника</td>
+            <td>{{ heatPoint.satelliteTime }}</td>
+          </tr>
+          <tr>
+            <td class="param-name">Дата появления на Портале</td>
+            <td>{{ heatPoint.satellitePortalTime }}</td>
+          </tr>
+          <tr>
+            <td class="param-name">Дата отработки</td>
+            <td>{{ heatPoint.reactionTime }}</td>
+          </tr>
+          <tr>
+            <td class="param-name">Статус</td>
+            <td>что это в апи???</td>
+          </tr>
+          <tr>
+            <td class="param-name">Ответственный</td>
+            <td>
+              <p *ngIf="heatPoint.respPerson">
+                <b>{{ heatPoint.respPerson.name }}</b>
+                <br />
+                <a class="link" href="tel:+{{ heatPoint.respPerson.phone }}">{{
+                  heatPoint.respPerson.phone
+                }}</a>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td class="param-name">Субьект</td>
+            <td>{{ heatPoint.subject }}</td>
+          </tr>
+          <tr>
+            <td class="param-name">Регион</td>
             <td>{{ heatPoint.region }}</td>
           </tr>
           <tr>
-            <td class="param-name">Субьект:</td>
-            <td>{{ heatPoint.subject }}</td>
+            <td class="param-name">Ближайший населенный пункт</td>
+            <td>{{ heatPoint.theNearestSettlement }}</td>
+          </tr>
+          <tr>
+            <td class="param-name">Дистанция</td>
+            <td>{{ heatPoint.destination | number }}</td>
+          </tr>
+          <tr>
+            <td class="param-name">Азимут</td>
+            <td>{{ heatPoint.azimuth }}</td>
+          </tr>
+          <tr>
+            <td class="param-name">Уровень риска</td>
+            <td>{{ heatPoint.riskLeve }}%</td>
+          </tr>
+          <tr>
+            <td class="param-name">Вероятный тип</td>
+            <td>{{ heatPoint.type }}</td>
+          </tr>
+          <tr>
+            <td class="param-name">
+              Класс пожарной опасности (по ближайшей метеостанции)
+            </td>
+            <td>{{ heatPoint.classification }}</td>
           </tr>
         </tbody>
       </table>
@@ -46,7 +100,7 @@
             <td>{{ input.data.feature.attrs.cn }}</td>
           </tr>
           <tr>
-            <td class="param-name">Присвоение кадастровой стоимости:</td>
+            <td class="param-name">Присвоение кадастровой стоимости</td>
             <td>{{ input.data.feature.attrs.date_cost }}</td>
           </tr>
           <tr>
@@ -54,7 +108,7 @@
             <td>{{ input.data.feature.attrs.area_value | number }} м2</td>
           </tr>
           <tr>
-            <td class="param-name">Введение в эксплуатацию:</td>
+            <td class="param-name">Введение в эксплуатацию</td>
             <td>{{ input.data.feature.attrs.cc_date_entering }}</td>
           </tr>
           <tr>
