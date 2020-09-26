@@ -5,7 +5,7 @@ import { tap } from 'rxjs/operators';
 import { HeatService } from './services/heat.service';
 import { PkkService } from './services/pkk.service';
 import { IFeature } from './types/feature.type';
-import { IHeatPoint } from './types/heat.type';
+import { IHeatItem, IHeatPoint } from './types/heat.type';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +16,7 @@ export class AppComponent {
   title = 'firemap';
   opened = false;
   data$: Observable<IFeature | null>;
-  heat$: Observable<IHeatPoint[]>;
+  heat$: Observable<IHeatItem[]>;
 
   constructor(
     private pkkService: PkkService,
@@ -29,7 +29,7 @@ export class AppComponent {
         }
       })
     );
-    this.heat$ = this.heatService.points$;
+    this.heat$ = this.heatService.state$;
     this.heatService.getHeatPoints();
   }
 
