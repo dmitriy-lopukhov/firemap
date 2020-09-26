@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { latLng, LeafletEvent } from 'leaflet';
+import { LeafletEvent } from 'leaflet';
 import { combineLatest, Observable } from 'rxjs';
 import { tap, map, debounceTime } from 'rxjs/operators';
 import { HeatService } from './services/heat.service';
@@ -43,7 +43,9 @@ export class AppComponent {
         };
       })
     );
-    this.heat$ = this.heatService.state$;
+    this.heat$ = this.heatService.state$.pipe(
+      tap((data) => console.log('heat', data))
+    );
     this.heatService.getHeatPoints();
   }
 

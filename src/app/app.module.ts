@@ -8,12 +8,19 @@ import { MarkerMapComponent } from './components/marker-map/marker-map.component
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatListModule } from '@angular/material/list';
 import { MarkerDetailsComponent } from './components/marker-details/marker-details.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { HeatListComponent } from './components/heat-list/heat-list.component';
 
 @NgModule({
-  declarations: [AppComponent, MarkerMapComponent, MarkerDetailsComponent],
+  declarations: [
+    AppComponent,
+    MarkerMapComponent,
+    MarkerDetailsComponent,
+    HeatListComponent,
+  ],
   imports: [
     CommonModule,
     BrowserModule,
@@ -23,6 +30,7 @@ import { CommonModule } from '@angular/common';
     MatSidenavModule,
     MatTabsModule,
     HttpClientModule,
+    MatListModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

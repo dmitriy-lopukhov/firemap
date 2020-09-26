@@ -1,0 +1,10 @@
+<div class="padding-10">
+  <mat-list *ngIf="heat">
+    <div mat-subheader>Термические точки</div>
+    <mat-list-item *ngFor="let point of heat" (click)="onSelectPoint(point)">
+      <div mat-line>id: {{ point.id }}</div>
+      <div mat-line>{{ point.region }}, {{ point.subject }}</div>
+      <div mat-line>{{ point.reportDay }}</div>
+    </mat-list-item>
+  </mat-list>
+</div>

@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   NgZone,
+  OnDestroy,
   Output,
 } from '@angular/core';
 import {
@@ -23,6 +24,13 @@ import { IHeatItem, IHeatPoint, IPoint } from 'src/app/types/heat.type';
 import * as turf from '@turf/turf';
 import { IMapClickEvent } from 'src/app/types/marker-map.type';
 import { PointService } from 'src/app/services/point.service';
+import { Subject } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  takeUntil,
+} from 'rxjs/operators';
 
 declare var L: any;
 declare var HeatmapOverlay: any;
@@ -39,7 +47,7 @@ const initialView = {
   styleUrls: ['./marker-map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarkerMapComponent {
+export class MarkerMapComponent implements OnDestroy {
   @Input() set heat(heat: IHeatItem[] | null) {
     this.heats = heat;
     if (heat) {
@@ -87,8 +95,31 @@ export class MarkerMapComponent {
     lngField: 'lng',
     valueField: 'count',
   });
+  destroy$ = new Subject();
 
-  constructor(private zone: NgZone, private pointService: PointService) {}
+  constructor(private zone: NgZone, private pointService: PointService) {
+    this.pointService.state$
+      .pipe(
+        filter((val) => !!val),
+        distinctUntilChanged((val1, val2) => {
+          return !!(
+            val1 &&
+            val2 &&
+            val1.lat === val2.lat &&
+            val1.lng === val2.lng
+          );
+        }),
+        debounceTime(200),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((point) => {
+        console.log('point', point);
+        if (this.map && point) {
+          const coords: LatLngExpression = [point.lat, point.lng];
+          this.map.panTo(coords);
+        }
+      });
+  }
 
   options = {
     layers: [
@@ -184,5 +215,9 @@ export class MarkerMapComponent {
       }
     }
     return null;
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
   }
 }

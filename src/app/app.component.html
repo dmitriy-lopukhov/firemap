@@ -15,4 +15,8 @@
       (markerClicked)="onMarkerClicked($event)"
     ></app-marker-map>
   </mat-sidenav-content>
+
+  <mat-sidenav opened mode="side" position="end">
+    <app-heat-list [heat]="heat$ | async"></app-heat-list>
+  </mat-sidenav>
 </mat-sidenav-container>
