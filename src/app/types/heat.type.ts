@@ -18,6 +18,7 @@ export interface IHeatItem {
     points: IPoint[];
   };
   reportDay: string;
+  status: string;
   satelliteTime: string;
   satellitePortalTime: string;
   reactionTime: string | null;
