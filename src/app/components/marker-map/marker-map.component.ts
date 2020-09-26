@@ -151,7 +151,7 @@ export class MarkerMapComponent {
 
   private getHeatPolygon(item: IHeatItem): Polygon<any> {
     const points: LatLngExpression[] = item.polygonBurn.points.map((i) => {
-      return [i.lon, i.lat]; // warning! vice versa
+      return [i.lat, i.lon];
     });
     const firearea: number = this.calculateFireArea(item.polygonBurn.points);
     console.log('firearea', firearea);
@@ -162,7 +162,7 @@ export class MarkerMapComponent {
 
   private calculateFireArea(points: IPoint[]): number {
     const positions: number[][] = points.map((i) => {
-      return [i.lon, i.lat]; // warning! vice versa
+      return [i.lat, i.lon];
     });
     const poly = turf.polygon([positions]);
     const firearea = turf.area(poly);
@@ -176,7 +176,7 @@ export class MarkerMapComponent {
     const point = turf.point([event.latlng.lat, event.latlng.lng]);
     for (const heat of this.heats) {
       const positions: number[][] = heat.polygonBurn.points.map((i) => {
-        return [i.lon, i.lat]; // warning! vice versa
+        return [i.lat, i.lon];
       });
       const poly = turf.polygon([positions]);
       if (turf.inside(point, poly)) {
