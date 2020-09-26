@@ -7,23 +7,39 @@
         : "Нет адреса"
     }}
   </p>
-  <p *ngIf="!(input && input.data)">Адрес не найден</p>
+  <p *ngIf="!(input && input.data)">-</p>
   <p *ngIf="input && input.point">
     Точка: {{ input.point.lat }}, {{ input.point.lng }}
   </p>
 </div>
 <mat-tab-group *ngIf="input">
-  <mat-tab label="Информация">
+  <mat-tab label="Информация" *ngIf="heatPoint$ | async as heatPoint">
     <div class="padding-10">
-      <table class="params" *ngIf="input.point && input.point.firearea">
+      <table class="params">
         <tbody>
           <tr>
+            <td class="param-name">ID точки:</td>
+            <td>{{ heatPoint.id }}</td>
+          </tr>
+          <tr *ngIf="input.point && input.point.firearea">
             <td class="param-name">Площадь возгорания</td>
-            <td>{{ input.point.firearea }} м2</td>
+            <td>{{ input.point.firearea | number }} м2</td>
+          </tr>
+          <tr>
+            <td class="param-name">Регион:</td>
+            <td>{{ heatPoint.region }}</td>
+          </tr>
+          <tr>
+            <td class="param-name">Субьект:</td>
+            <td>{{ heatPoint.subject }}</td>
           </tr>
         </tbody>
       </table>
-      <table class="params" *ngIf="input && input.data">
+    </div>
+  </mat-tab>
+  <mat-tab label="Кадастр" *ngIf="input.data">
+    <div class="padding-10">
+      <table class="params">
         <tbody>
           <tr>
             <td class="param-name">Кадастровый номер</td>
@@ -49,6 +65,7 @@
       </table>
     </div>
   </mat-tab>
+
   <mat-tab label="Услуги" *ngIf="input.data">
     <div class="padding-10">
       <table class="params">

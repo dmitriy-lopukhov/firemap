@@ -20,9 +20,7 @@ import {
   polygon,
   tileLayer,
 } from 'leaflet';
-import { IHeatItem, IHeatPoint, IPoint } from 'src/app/types/heat.type';
-import * as turf from '@turf/turf';
-import { IMapClickEvent } from 'src/app/types/marker-map.type';
+import { IHeatItem, IHeatPoint } from 'src/app/types/heat.type';
 import { PointService } from 'src/app/services/point.service';
 import { Subject } from 'rxjs';
 import {
@@ -31,6 +29,8 @@ import {
   filter,
   takeUntil,
 } from 'rxjs/operators';
+import { IMapPoint } from 'src/app/types/map-point.type';
+import { HeatService } from 'src/app/services/heat.service';
 
 declare var L: any;
 declare var HeatmapOverlay: any;
@@ -97,7 +97,11 @@ export class MarkerMapComponent implements OnDestroy {
   });
   destroy$ = new Subject();
 
-  constructor(private zone: NgZone, private pointService: PointService) {
+  constructor(
+    private zone: NgZone,
+    private pointService: PointService,
+    private heatService: HeatService
+  ) {
     this.pointService.state$
       .pipe(
         filter((val) => !!val),
@@ -113,10 +117,13 @@ export class MarkerMapComponent implements OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe((point) => {
-        console.log('point', point);
         if (this.map && point) {
+          console.log('point', point);
+          this.markers = [this.getMarker(point.lat, point.lng)];
+          this.layers = [...this.polygons, ...this.markers];
           const coords: LatLngExpression = [point.lat, point.lng];
           this.map.panTo(coords);
+          this.map.fire('click');
         }
       });
   }
@@ -138,16 +145,23 @@ export class MarkerMapComponent implements OnDestroy {
     // this.markerClicked.next(event);
   }
 
-  onLeafletClick(event: LeafletMouseEvent): void {
+  onLeafletClick(event: LeafletMouseEvent | undefined): void {
+    if (!(event && event.latlng)) {
+      return;
+    }
     this.markers = [this.getMarker(event.latlng.lat, event.latlng.lng)];
     this.layers = [...this.polygons, ...this.markers];
-    const mapEvent: IMapClickEvent = {
+    const mapEvent: IMapPoint = {
       ...event.latlng,
     };
 
-    const firearea: number | null = this.getFirePoint(event);
-    if (firearea) {
-      mapEvent.firearea = firearea;
+    const firePoint: {
+      firearea: number;
+      pointId: number;
+    } | null = this.heatService.getFirePoint(event.latlng, this.heats);
+    if (firePoint) {
+      mapEvent.firearea = firePoint.firearea;
+      mapEvent.pointId = firePoint.pointId;
     }
     this.pointService.setMapPoint(mapEvent);
     this.mapClicked.next(event.latlng);
@@ -185,39 +199,12 @@ export class MarkerMapComponent implements OnDestroy {
     const points: LatLngExpression[] = item.polygonBurn.points.map((i) => {
       return [i.lat, i.lon];
     });
-    const firearea: number = this.calculateFireArea(item.polygonBurn.points);
     return polygon(points, {
       color: 'red',
     });
   }
 
-  private calculateFireArea(points: IPoint[]): number {
-    const positions: number[][] = points.map((i) => {
-      return [i.lat, i.lon];
-    });
-    const poly = turf.polygon([positions]);
-    const firearea = turf.area(poly);
-    return firearea;
-  }
-
-  getFirePoint(event: LeafletMouseEvent): number | null {
-    if (!this.heats) {
-      return null;
-    }
-    const point = turf.point([event.latlng.lat, event.latlng.lng]);
-    for (const heat of this.heats) {
-      const positions: number[][] = heat.polygonBurn.points.map((i) => {
-        return [i.lat, i.lon];
-      });
-      const poly = turf.polygon([positions]);
-      if (turf.inside(point, poly)) {
-        return Math.round(this.calculateFireArea(heat.polygonBurn.points));
-      }
-    }
-    return null;
-  }
-
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.destroy$.next();
   }
 }

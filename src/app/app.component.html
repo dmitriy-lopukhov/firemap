@@ -2,9 +2,9 @@
   Информационный ресурс для идентификации термических точек по принадлежности к
   категориям земель
 </p> -->
-
+<!-- [(opened)]="opened" -->
 <mat-sidenav-container class="example-container">
-  <mat-sidenav #sidenav mode="side" [(opened)]="opened">
+  <mat-sidenav #sidenav mode="side" opened>
     <app-marker-details [input]="data$ | async"></app-marker-details>
   </mat-sidenav>
 
