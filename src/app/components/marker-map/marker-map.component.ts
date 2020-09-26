@@ -46,6 +46,8 @@ export class MarkerMapComponent {
       shadowUrl: 'assets/marker-shadow.png',
       iconSize: [25, 41],
       shadowSize: [41, 41],
+      iconAnchor: [12, 41],
+      shadowAnchor: [12, 41],
     }),
   }).on('click', (event) => {
     this.zone.run(() => this.onMarkerClick(event));
@@ -91,6 +93,8 @@ export class MarkerMapComponent {
           shadowUrl: 'assets/marker-shadow.png',
           iconSize: [25, 41],
           shadowSize: [41, 41],
+          iconAnchor: [12, 41],
+          shadowAnchor: [12, 41],
         }),
       })
     );
