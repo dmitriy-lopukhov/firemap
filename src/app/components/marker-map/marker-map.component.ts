@@ -10,6 +10,7 @@ import {
 import {
   circle,
   Icon,
+  LatLng,
   latLng,
   LatLngExpression,
   LeafletEvent,
@@ -87,7 +88,7 @@ export class MarkerMapComponent implements OnDestroy {
   layers: (Polygon<any> | Marker<any>)[] = [...this.polygons, ...this.markers];
   zoom = 9;
   heatmapLayer = new HeatmapOverlay({
-    radius: 0.1,
+    radius: 0.01,
     maxOpacity: 0.7,
     scaleRadius: true,
     useLocalExtrema: true,
@@ -96,6 +97,7 @@ export class MarkerMapComponent implements OnDestroy {
     valueField: 'count',
   });
   destroy$ = new Subject();
+  latlng: LatLng | null = null;
 
   constructor(
     private zone: NgZone,
@@ -119,11 +121,20 @@ export class MarkerMapComponent implements OnDestroy {
       .subscribe((point) => {
         if (this.map && point) {
           console.log('point', point);
-          this.markers = [this.getMarker(point.lat, point.lng)];
-          this.layers = [...this.polygons, ...this.markers];
+          if (
+            !(
+              point &&
+              this.latlng &&
+              point.lat === this.latlng.lat &&
+              point.lng === this.latlng.lng
+            )
+          ) {
+            this.markers = [this.getMarker(point.lat, point.lng)];
+            this.layers = [...this.polygons, ...this.markers];
+          }
           const coords: LatLngExpression = [point.lat, point.lng];
           this.map.panTo(coords);
-          this.map.fire('click');
+          this.map.fire('click', null);
         }
       });
   }
@@ -149,6 +160,7 @@ export class MarkerMapComponent implements OnDestroy {
     if (!(event && event.latlng)) {
       return;
     }
+    this.latlng = event.latlng;
     this.markers = [this.getMarker(event.latlng.lat, event.latlng.lng)];
     this.layers = [...this.polygons, ...this.markers];
     const mapEvent: IMapPoint = {
