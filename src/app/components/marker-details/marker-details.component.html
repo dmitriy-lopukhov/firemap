@@ -8,34 +8,103 @@
 <mat-tab-group *ngIf="data">
   <mat-tab label="Информация">
     <div class="padding-10">
-      <div>id: {{ data.feature.attrs.id }}</div>
+      <table class="params">
+        <tbody>
+          <tr>
+            <td class="param-name">Кадастровый номер</td>
+            <td>{{ data.feature.attrs.cn }}</td>
+          </tr>
+          <tr>
+            <td class="param-name">Присвоение кадастровой стоимости:</td>
+            <td>{{ data.feature.attrs.date_cost }}</td>
+          </tr>
+          <tr>
+            <td class="param-name">Площадь</td>
+            <td>{{ data.feature.attrs.area_value | number }} м2</td>
+          </tr>
+          <tr>
+            <td class="param-name">Введение в эксплуатацию:</td>
+            <td>{{ data.feature.attrs.cc_date_entering }}</td>
+          </tr>
+          <tr>
+            <td class="param-name">По документу</td>
+            <td>{{ data.feature.attrs.util_by_doc }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </mat-tab>
   <mat-tab label="Услуги">
     <div class="padding-10">
-      <p>
-        <a
-          class="link"
-          target="_blank"
-          href="https://rosreestr.gov.ru/wps/portal/cc_information_online?KN={{
-            data.feature.attrs.cn
-          }}"
-        >
-          Справочная информация по объектам недвижимости в режиме online
-        </a>
-      </p>
-      <p>
-        <a
-          class="link"
-          target="_blank"
-          href="https://rosreestr.gov.ru/wps/portal/p/cc_present/EGRN_1?KN={{
-            data.feature.attrs.cn
-          }}&objKind=002001001000"
-        >
-          Получить выписку из ЕГРН об основных характеристиках и
-          зарегистрированных правах на объект недвижимости
-        </a>
-      </p>
+      <table class="params">
+        <tbody>
+          <tr>
+            <td class="param-name">Кадастровая стоимость</td>
+            <td>
+              <a
+                class="link"
+                target="_blank"
+                href="https://rosreestronline.ru/order/?cadNum={{
+                  data.feature.attrs.cn
+                }}&docId=7"
+                >В срочной выписке из ЕГРН</a
+              >
+            </td>
+          </tr>
+          <tr>
+            <td class="param-name">Собственники</td>
+            <td>
+              <a
+                class="link"
+                target="_blank"
+                href="https://rosreestronline.ru/order/?cadNum={{
+                  data.feature.attrs.cn
+                }}&docId=8"
+                >В выписке о переходе прав</a
+              >
+            </td>
+          </tr>
+          <tr>
+            <td class="param-name">Долги собственников</td>
+            <td>
+              <a
+                class="link"
+                target="_blank"
+                href="https://rosreestronline.ru/order/?cadNum={{
+                  data.feature.attrs.cn
+                }}&docId=11715"
+                >В отчете о рисках</a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <hr />
+      <div class="padding-10">
+        <p>
+          <a
+            class="link"
+            target="_blank"
+            href="https://rosreestr.gov.ru/wps/portal/cc_information_online?KN={{
+              data.feature.attrs.cn
+            }}"
+          >
+            Справочная информация по объектам недвижимости в режиме online
+          </a>
+        </p>
+        <p>
+          <a
+            class="link"
+            target="_blank"
+            href="https://rosreestr.gov.ru/wps/portal/p/cc_present/EGRN_1?KN={{
+              data.feature.attrs.cn
+            }}&objKind=002001001000"
+          >
+            Получить выписку из ЕГРН об основных характеристиках и
+            зарегистрированных правах на объект недвижимости
+          </a>
+        </p>
+      </div>
     </div>
   </mat-tab>
 </mat-tab-group>
