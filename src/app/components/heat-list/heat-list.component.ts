@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { HeatService } from 'src/app/services/heat.service';
+import { PkkService } from 'src/app/services/pkk.service';
 import { PointService } from 'src/app/services/point.service';
 import { IHeatItem } from 'src/app/types/heat.type';
 import { IMapPoint } from 'src/app/types/map-point.type';
@@ -14,7 +15,8 @@ export class HeatListComponent implements OnInit {
 
   constructor(
     private pointService: PointService,
-    private heatService: HeatService
+    private heatService: HeatService,
+    private pkkService: PkkService
   ) {}
 
   ngOnInit(): void {}
@@ -33,5 +35,6 @@ export class HeatListComponent implements OnInit {
       mapEvent.pointId = firePoint.pointId;
     }
     this.pointService.setMapPoint(mapEvent);
+    this.pkkService.getInformation(mapEvent.lat, mapEvent.lng);
   }
 }
